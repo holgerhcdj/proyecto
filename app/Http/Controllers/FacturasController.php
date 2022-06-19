@@ -36,34 +36,58 @@ class FacturasController extends AppBaseController
      */
     public function index(Request $request)
     {
-        //$facturas = $this->facturasRepository->all();
 
-        $facturas=DB::select("SELECT f.fac_id,
-                        f.fac_descuento,
-                        f.fac_iva,
-                        p.per_apellidos,
-                        p.per_nombres,
-                        pst.pst_razon_social,
-                        f.fac_numero_facturas,
-                        f.fac_fecha, 
-                        SUM(fd.fade_cant*fd.fade_vu) AS subt
-                        FROM facturas f 
-                        JOIN facturas_detalles fd ON f.fac_id=fd.fac_id
-                        JOIN personas p ON f.per_id=p.per_id
-                        JOIN almacen pst ON f.pst_id=pst.pst_id
-                        GROUP BY f.fac_id,f.fac_descuento,
-                        f.fac_iva,
-                        p.per_apellidos,
-                        p.per_nombres,
-                        pst.pst_razon_social,
-                        f.fac_numero_facturas,
-                        f.fac_fecha 
+        $dt=$request->all();
+        $facturas=[];
+        $desde=date('Y-m-d');
+        $hasta=date('Y-m-d');
+        if(isset($dt['btn_buscar'])){
+            $desde=$dt['desde'];
+            $hasta=$dt['hasta'];
 
-          ");
+            $facturas=DB::select("SELECT f.fac_id,
+                            f.fac_descuento,
+                            f.fac_iva,
+                            p.per_apellidos,
+                            p.per_nombres,
+                            pst.pst_razon_social,
+                            f.fac_numero_facturas,
+                            f.fac_fecha, 
+                            SUM(fd.fade_cant*fd.fade_vu) AS subt
+                            FROM facturas f 
+                            JOIN facturas_detalles fd ON f.fac_id=fd.fac_id
+                            JOIN personas p ON f.per_id=p.per_id
+                            JOIN almacen pst ON f.pst_id=pst.pst_id
+                            WHERE f.fac_fecha BETWEEN '$desde' AND '$hasta'
+                            GROUP BY f.fac_id,f.fac_descuento,
+                            f.fac_iva,
+                            p.per_apellidos,
+                            p.per_nombres,
+                            pst.pst_razon_social,
+                            f.fac_numero_facturas,
+                            f.fac_fecha ");
+        }
+
+        if($dt['btn_buscar']=='buscar'){
+            return view('facturas.index')
+            ->with('facturas', $facturas)
+            ->with('desde', $desde)
+            ->with('hasta', $hasta)
+            ;
+
+        }
+
+       if($dt['btn_buscar']=='pdf'){
+
+            $pdf = app('dompdf.wrapper');
+            $pdf->loadView('facturas.reporte',[ 'facturas'=>$facturas ] );
+            return $pdf->stream();  
 
 
-        return view('facturas.index')
-            ->with('facturas', $facturas);
+        }
+
+
+
     }
 
     /**

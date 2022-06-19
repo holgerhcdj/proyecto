@@ -24,3 +24,5 @@ Route::resource('personas', 'PersonasController');
 Route::resource('tipos', 'TiposController');
 Route::resource('almaneces', 'AlmanecesController');
 Route::resource('productos', 'ProductosController');
+
+Route::post('/facturas', 'FacturasController@index')->name('facturas.index');

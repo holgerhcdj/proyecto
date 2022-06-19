@@ -1,3 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Reporte de Ventas</title>
+    <style>
+    	*{
+    		font-size:10px;
+    	}
+    </style>
+  </head>
+  <body>
+    <h1>Reporte</h1>
+
 <div class="table-responsive-sm">
     <table class="table table-striped" id="facturas-table">
         <thead>
@@ -8,7 +26,6 @@
                 <th>Nº Factura</th>
                 <th>Fecha Registro</th>
                 <th>Total</th>
-                <th colspan="3">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -21,21 +38,15 @@
             $iva=($facturas->subt-$facturas->fac_descuento)*0.12;
             $total=($facturas->subt-$facturas->fac_descuento)+$iva;
         }
-
         $gtotal=$gtotal+$total;
-
         ?>
             <tr>
-            <td>{{ $loop->iteration }}</td>    
-            <td>{{ $facturas->per_apellidos.' '.$facturas->per_nombres }}</td>
-            <td>{{ $facturas->pst_razon_social }}</td>
-            <td>00000{{ $facturas->fac_numero_facturas }}</td>
-            <td>{{ $facturas->fac_fecha }}</td>
-            <td class="text-right" >{{ number_format($total,2) }} $</td>
-                <td>
-                        <a href="{{ route('facturas.show', [$facturas->fac_id]) }}" target="_blank" class='btn btn-ghost-danger'><i class="fa fa-file-pdf-o"></i></a>
-                        <a href="{{ route('facturas.edit', [$facturas->fac_id]) }}" class='btn btn-ghost-info'><i class="fa fa-pencil"></i></a>
-                </td>
+	            <td>{{ $loop->iteration }}</td>    
+	            <td>{{ $facturas->per_apellidos.' '.$facturas->per_nombres }}</td>
+	            <td>{{ $facturas->pst_razon_social }}</td>
+	            <td>{{ $facturas->fac_numero_facturas }}</td>
+	            <td>{{ $facturas->fac_fecha }}</td>
+	            <td class="text-right" >{{ number_format($total,2) }} $</td>
             </tr>
         @endforeach
         </tbody>
@@ -45,3 +56,7 @@
         </tr>
     </table>
 </div>
+
+
+  </body>
+</html>
